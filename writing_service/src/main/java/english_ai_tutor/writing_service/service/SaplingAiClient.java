@@ -1,38 +1,47 @@
 package english_ai_tutor.writing_service.service;
 
-import english_ai_tutor.writing_service.dto.SaplingRequest;
-import english_ai_tutor.writing_service.dto.SaplingResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import english_ai_tutor.writing_service.dto.GrammarSpellDto;
+import english_ai_tutor.writing_service.dto.SaplingDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SaplingAiClient {
-    private final WebClient webClient;
+    @Value("${sapling.api.key}")
+    private String key;
+    private static final String SESSION_ID = "SESSION_ID";
+    private static final String BASE_URL = "https://api.sapling.ai";
+    public GrammarSpellDto.Response checkGrammarAndSpell(GrammarSpellDto.Command command){
+        SaplingDto.Request request = SaplingDto.Request.builder()
+                .key(key)
+                .text(command.input())
+                .session_id(SESSION_ID)
+                .build();
 
-    @Autowired
-    public SaplingAiClient(@Qualifier("SaplingAIWebClient")WebClient webClient) {
-        this.webClient = webClient;
-    }
-
-    public void edits(){
-        SaplingRequest request = SaplingRequest.builder()
-                .key("3AF51X1629SPJYYS1MDYBCQKNSO7OWRS")
-                .text("She doesn't like to watching horor movies because they makes her feel very scared and she can't sleep good at night.")
-                .session_id("test_session").build();
-
-        SaplingResponse response = webClient.post()
+        ResponseEntity<SaplingDto.Response> response = RestClient.builder()
+                .baseUrl(BASE_URL)
+                .build()
+                .post()
                 .uri("/api/v1/edits")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
+                .body(request)
                 .retrieve()
-                .bodyToMono(SaplingResponse.class)
-                .block();
+                .toEntity(SaplingDto.Response.class);
 
-
-        response.getEdits().stream().forEach(edit -> System.out.println(edit.toString()));
+        List<GrammarSpellDto.GrammarSpellResult> grammarSpellResults = response.getBody().edits().stream().map(
+                edit -> GrammarSpellDto.GrammarSpellResult.builder()
+                        .error(edit.general_error_type())
+                        .error_message(edit.error_type())
+                        .startIdx(edit.start())
+                        .endIdx(edit.end())
+                        .replacement(edit.replacement())
+                        .build()
+        ).toList();
+        return GrammarSpellDto.Response.builder().result(grammarSpellResults).build();
     }
 }

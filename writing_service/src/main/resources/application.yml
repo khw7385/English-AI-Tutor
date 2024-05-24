@@ -13,7 +13,7 @@ deepl:
 
 sapling:
   api:
-    key: ${SAPLING_API_KEY}
+
 
 ---
 spring:
