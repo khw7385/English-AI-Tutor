@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: writing
+  profiles:
+    group:
+      dev: dev
+      test: test
+      prod: prod
+
+deepl:
+  api:
+    key: ${DEEPL_API_KEY}
+
+sapling:
+  api:
+    key: ${SAPLING_API_KEY}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:~/writing'
+    username: sa
+    password:
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
