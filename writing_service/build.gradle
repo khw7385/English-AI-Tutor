@@ -29,6 +29,7 @@ dependencies {
 	implementation "com.deepl.api:deepl-java:1.5.0"
 
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
