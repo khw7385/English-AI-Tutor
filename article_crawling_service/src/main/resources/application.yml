@@ -27,7 +27,6 @@ spring:
       ddl-auto: create
     show-sql: true
     database: h2
-
 ---
 spring:
   config:
