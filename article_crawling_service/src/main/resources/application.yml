@@ -12,6 +12,7 @@ cloud:
   aws:
     s3:
       bucket: capstone-writing-service-bucket
+      domain: ${CLOUD_AWS_S3_DOMAIN}
     stack:
       auto: false
     region:
