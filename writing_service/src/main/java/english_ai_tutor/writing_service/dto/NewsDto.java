@@ -3,12 +3,12 @@ package english_ai_tutor.writing_service.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
+
 public class NewsDto {
-    private String title;
+    @Builder
+    public record Command(Integer level){}
 
     @Builder
-    public NewsDto(String title) {
-        this.title = title;
+    public record Response(Long id, String title, String s3Url, Integer level, String category){
     }
 }

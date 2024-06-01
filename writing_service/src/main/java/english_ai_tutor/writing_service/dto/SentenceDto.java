@@ -1,17 +1,17 @@
 package english_ai_tutor.writing_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
+
 public class SentenceDto {
-    private String Korean;
-    private String English;
-    private Integer level;
     @Builder
-    public SentenceDto(String korean, String english, Integer level) {
-        this.Korean = korean;
-        this.English = english;
-        this.level = level;
+    public record Command(Long sentenceId, Long newsId){
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Builder
+    public record Response(Long sentenceId, String korean, String english){
     }
 }
