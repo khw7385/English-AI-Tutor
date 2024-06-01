@@ -20,6 +20,11 @@ cloud:
     credentials:
       access-key: ${CLOUD_AWS_ACCESS_KEY}
       secret-key: ${CLOUD_AWS_SECRET_KEY}
+
+deepl:
+  api:
+    key: ${DEEPL_API_KEY}
+
 ---
 spring:
   config:
@@ -27,9 +32,9 @@ spring:
       on-profile: test
   datasource:
     driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:~/writing'
-    username: ${DATABASE_ID}
-    password: ${DATABASE_PW}
+    url: 'jdbc:h2:tcp://localhost:9092/~/writing2'
+    username: sa
+    password:
   h2:
     console:
       path: /h2-console
@@ -37,7 +42,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     database: h2
 ---
@@ -48,14 +53,14 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ${DATABASE_ID}
-    password: ${DATABASE_PW}
+    username: ${MYSQL_DATABASE_ID}
+    password: ${MYSQL_DATABASE_PW}
     hikari:
       data-source-properties:
         rewriteBatchedStatements: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: false
@@ -69,8 +74,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ${DATABASE_ID}
-    password: ${DATABASE_PW}
+    username: ${MYSQL_DATABASE_ID}
+    password: ${MYSQL_DATABASE_PW}
     hikari:
       data-source-properties:
         rewriteBatchedStatements: true
