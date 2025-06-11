@@ -23,27 +23,24 @@ public class OpenAiRealtimeApi {
 
     private static final Integer DELAY_SECONDS = 3;
 
-    @Value("${openai.api-key}")
-    private String OPENAI_API_KEY;
-
     @Value("${openai.realtime-model}")
     private String OPENAI_REALTIME_MODEL;
 
     private final WebSocketClient webSocketClient;
     private final RealtimeWebSocketHandler webSocketHandler;
 
-    public WebSocketSession openWebSocketSession(){
+    public WebSocketSession openWebSocketSession(String clientId){
         try {
-            return openWebSocketSessionAsync().get(DELAY_SECONDS, TimeUnit.SECONDS);
+            return openWebSocketSessionAsync(clientId).get(DELAY_SECONDS, TimeUnit.SECONDS);
         }catch (InterruptedException | ExecutionException | TimeoutException e){
             // 임시 처리
             throw new RuntimeException();
         }
     }
 
-    private CompletableFuture<WebSocketSession> openWebSocketSessionAsync(){
+    private CompletableFuture<WebSocketSession> openWebSocketSessionAsync(String clientId){
         return webSocketClient.execute(webSocketHandler,
-                createHttpHeaders(),
+                createHttpHeaders(clientId),
                 UriComponentsBuilder.
                         fromUriString(OPENAI_REALTIME_WEBSOCKET_URL)
                         .queryParam("model", OPENAI_REALTIME_MODEL)
@@ -52,9 +49,9 @@ public class OpenAiRealtimeApi {
         );
     }
 
-    private WebSocketHttpHeaders createHttpHeaders(){
+    private WebSocketHttpHeaders createHttpHeaders(String clientId){
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", OPENAI_API_KEY));
+        headers.add(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", clientId));
         headers.add(OPENAI_BETA_HEADER, OPENAI_BETA_VALUE);
         return headers;
     }
