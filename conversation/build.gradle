@@ -36,3 +36,18 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+def envFile = file(".env")
+def envProps = [:]
+if(envFile.exists()){
+	envFile.eachLine {line ->
+		line = line.trim()
+		if(!line || line.startsWith('#')) return
+		def (key, value) = line.split("=", 2)
+		envProps[key] = value
+	}
+}
+
+test{
+	environment envProps
+}

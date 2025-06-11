@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: conversation
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  realtime-model: gpt-4o-realtime-preview-2025-06-03
