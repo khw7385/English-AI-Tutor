@@ -1,4 +1,4 @@
-package me.khw7385.conversation.config;
+package me.khw7385.conversation.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
