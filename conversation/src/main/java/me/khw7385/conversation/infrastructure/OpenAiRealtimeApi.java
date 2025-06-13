@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.RealtimeApi;
 import me.khw7385.conversation.infrastructure.websocket.MessageChannelFactory;
+import me.khw7385.conversation.infrastructure.websocket.RealtimeWebSocketHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,6 @@ public class OpenAiRealtimeApi implements RealtimeApi {
     private final WebSocketClient webSocketClient;
     private final MessageChannelFactory messageChannelFactory;
     private final RealtimeWebSocketHandler webSocketHandler;
-
 
     @Override
     public MessageChannel openMessageChannel(){

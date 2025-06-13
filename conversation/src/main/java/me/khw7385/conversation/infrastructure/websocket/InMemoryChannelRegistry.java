@@ -1,4 +1,4 @@
-package me.khw7385.conversation.infrastructure;
+package me.khw7385.conversation.infrastructure.websocket;
 
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
