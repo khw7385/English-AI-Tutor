@@ -38,3 +38,7 @@ out/
 
 ## env ##
 .env
+
+## resources/static ##
+src/main/resources/static
+src/test/resources
