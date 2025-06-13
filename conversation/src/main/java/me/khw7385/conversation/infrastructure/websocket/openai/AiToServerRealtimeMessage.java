@@ -1,9 +1,9 @@
-package me.khw7385.conversation.infrastructure.response;
+package me.khw7385.conversation.infrastructure.websocket.openai;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 
-public record RealtimeEventResponse(
+public record AiToServerRealtimeMessage(
         @JsonProperty("eventId") String eventId,
         RealtimeEventType type,
         @JsonProperty("response_id") String responseId,

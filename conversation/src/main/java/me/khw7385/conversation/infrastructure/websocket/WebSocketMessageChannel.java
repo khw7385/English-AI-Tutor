@@ -3,9 +3,8 @@ package me.khw7385.conversation.infrastructure.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
-import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
-import me.khw7385.conversation.infrastructure.request.RealtimeEventRequest;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -23,10 +22,9 @@ public class WebSocketMessageChannel implements MessageChannel {
     }
 
     @Override
-    public void sendAudioMessage(String base64chunk) {
+    public void sendAudioMessage(Message message) {
         try {
-            String json = objectMapper.writeValueAsString(
-                    RealtimeEventRequest.of(RealtimeEventType.CLIENT_INPUT_AUDIO_BUFFER_APPEND, base64chunk));
+            String json = objectMapper.writeValueAsString(message);
             session.sendMessage(new TextMessage(json));
         } catch (IOException e) {
             // 임시 처리
@@ -38,7 +36,7 @@ public class WebSocketMessageChannel implements MessageChannel {
         try {
             session.close();
         } catch (IOException e) {
-            log.warn("WebSocket 세션 종 중 I/O 오류 발 (sessionId={}): {}", session.getId(), e.getMessage());
+            log.warn("WebSocket 세션 종료 중 I/O 오류 발생 (sessionId={}): {}", session.getId(), e.getMessage());
         }
     }
 }
