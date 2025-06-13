@@ -1,4 +1,4 @@
-package me.khw7385.conversation.infrastructure;
+package me.khw7385.conversation.infrastructure.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
