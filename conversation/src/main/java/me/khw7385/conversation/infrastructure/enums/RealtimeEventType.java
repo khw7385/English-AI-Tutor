@@ -47,7 +47,7 @@ public enum RealtimeEventType {
 
     TRANSCRIPTION_SESSION_UPDATED("transcript_session.updated"),
 
-    RATE_LIMITS_UPDATED("rate_limits_updated");
+    RATE_LIMITS_UPDATED("rate_limits.updated");
 
     private final String value;
 

@@ -2,6 +2,7 @@ package me.khw7385.conversation.application;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
+import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
 import me.khw7385.conversation.infrastructure.OpenAiRealtimeApi;
@@ -23,7 +24,7 @@ public class AudioStreamingFacade implements AudioStreamingUseCase {
     }
 
     @Override
-    public void forward(String id, String message){
+    public void forward(String id, Message message){
         MessageChannel channel = sessionRegistry.resolve(id);
         channel.sendAudioMessage(message);
     }

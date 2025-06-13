@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.RealtimeApi;
 import me.khw7385.conversation.infrastructure.websocket.MessageChannelFactory;
-import me.khw7385.conversation.infrastructure.websocket.RealtimeWebSocketHandler;
+import me.khw7385.conversation.infrastructure.websocket.openai.RealtimeWebSocketHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;

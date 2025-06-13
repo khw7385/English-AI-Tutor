@@ -2,9 +2,11 @@ package me.khw7385.conversation.infrastructure.event;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
+import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 import me.khw7385.conversation.infrastructure.event.dto.ClientAudioChunkReceivedEvent;
 import me.khw7385.conversation.infrastructure.event.dto.ClientWebSocketClosedEvent;
 import me.khw7385.conversation.infrastructure.event.dto.ClientWebSocketConnectedEvent;
+import me.khw7385.conversation.infrastructure.websocket.openai.ServerToAiRealtimeMessage;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,8 @@ public class ClientWebSocketEventHandler {
 
     @EventListener
     public void handle(ClientAudioChunkReceivedEvent event){
-        audioStreamingUseCase.forward(event.webSocketId(), event.audio());
+        audioStreamingUseCase.forward(event.webSocketId(),
+                ServerToAiRealtimeMessage.of(RealtimeEventType.CLIENT_INPUT_AUDIO_BUFFER_APPEND, event.audio()));
     }
 
     @EventListener
