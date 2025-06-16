@@ -2,6 +2,8 @@ package me.khw7385.conversation.infrastructure.event;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
+import me.khw7385.conversation.application.port.outbound.MessageChannel;
+import me.khw7385.conversation.core.exception.MessageChannelConnectionException;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 import me.khw7385.conversation.infrastructure.event.dto.ClientAudioChunkReceivedEvent;
 import me.khw7385.conversation.infrastructure.event.dto.ClientWebSocketClosedEvent;
@@ -17,7 +19,12 @@ public class ClientWebSocketEventHandler {
 
     @EventListener
     public void handle(ClientWebSocketConnectedEvent event){
-        audioStreamingUseCase.connect(event.webSocketId(), event.channel());
+        MessageChannel channel = event.channel();
+        try{
+            audioStreamingUseCase.connect(event.webSocketId(), channel);
+        }catch(MessageChannelConnectionException e){
+            channel.close();
+        }
     }
 
     @EventListener

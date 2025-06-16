@@ -11,16 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AudioStreamingFacade implements AudioStreamingUseCase {
-    private final ChannelRegistry sessionRegistry;
+    private final ChannelRegistry channelRegistry;
 
     private final OpenAiRealtimeApi realtimeApi;
 
     @Override
     public void connect(String id, MessageChannel clientChannel){
         MessageChannel aiChannel = realtimeApi.openMessageChannel();
-
-        sessionRegistry.register(id, aiChannel);
-        sessionRegistry.register(aiChannel.getId(), clientChannel);
+        channelRegistry.register(id, aiChannel.getId(), clientChannel);
+        channelRegistry.register(aiChannel.getId(), id, aiChannel);
     }
 
     @Override
