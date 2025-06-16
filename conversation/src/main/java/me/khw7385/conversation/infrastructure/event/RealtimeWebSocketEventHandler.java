@@ -2,7 +2,10 @@ package me.khw7385.conversation.infrastructure.event;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
+import me.khw7385.conversation.core.exception.MessageChannelNotFoundException;
+import me.khw7385.conversation.core.exception.MessageTransferException;
 import me.khw7385.conversation.infrastructure.event.dto.RealtimeAudioChunkReceivedEvent;
+import me.khw7385.conversation.infrastructure.event.dto.RealtimeWebSocketClosedEvent;
 import me.khw7385.conversation.infrastructure.websocket.client.ServerToClientAudioMessage;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

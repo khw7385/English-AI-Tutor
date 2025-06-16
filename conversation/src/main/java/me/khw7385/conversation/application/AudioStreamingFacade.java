@@ -30,11 +30,17 @@ public class AudioStreamingFacade implements AudioStreamingUseCase {
     }
 
     @Override
-    public void close(String id){
-        MessageChannel aiChannel = sessionRegistry.resolve(id);
+    public void releaseChannel(String id) {
+        MessageChannel channel = channelRegistry.resolve(id);
+        channelRegistry.unregister(id);
+        channel.close();
+    }
 
-        aiChannel.close();
-        sessionRegistry.unregister(id);
-        sessionRegistry.unregister(aiChannel.getId());
+    @Override
+    public void releasePairChannel(String id){
+        channelRegistry.resolvePairChannel(id).ifPresent(channel -> {
+            if(channel.isOpen()) channel.close();
+            channelRegistry.unregister(channel.getId());
+        });
     }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
+import me.khw7385.conversation.core.exception.MessageTransferException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -19,6 +20,11 @@ public class WebSocketMessageChannel implements MessageChannel {
     @Override
     public String getId() {
         return session.getId();
+    }
+
+    @Override
+    public boolean isOpen(){
+        return session.isOpen();
     }
 
     @Override

@@ -41,6 +41,6 @@ public class ClientWebSocketEventHandler {
 
     @EventListener
     public void handle(ClientWebSocketClosedEvent event) {
-        audioStreamingUseCase.close(event.webSocketId());
+        audioStreamingUseCase.releasePairChannel(event.webSocketId());
     }
 }
