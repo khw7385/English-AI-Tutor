@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 import me.khw7385.conversation.infrastructure.event.dto.RealtimeAudioChunkReceivedEvent;
+import me.khw7385.conversation.infrastructure.event.dto.RealtimeWebSocketClosedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -32,7 +33,6 @@ public class RealtimeWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.debug("Realtime WebSocket 연결 종료. id={}", session.getId());
-        super.afterConnectionClosed(session, status);
+        eventPublisher.publishEvent(new RealtimeWebSocketClosedEvent(session.getId()));
     }
 }
