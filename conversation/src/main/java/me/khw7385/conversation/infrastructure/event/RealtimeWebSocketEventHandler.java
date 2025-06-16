@@ -14,7 +14,11 @@ public class RealtimeWebSocketEventHandler {
 
     @EventListener
     public void handle(RealtimeAudioChunkReceivedEvent event){
-        audioStreamingUseCase.forward(event.webSocketId(), new ServerToClientAudioMessage(event.audio()));
+        try {
+            audioStreamingUseCase.forward(event.webSocketId(), new ServerToClientAudioMessage(event.audio()));
+        }catch(MessageChannelNotFoundException | MessageTransferException e){
+            audioStreamingUseCase.releaseChannel(event.webSocketId());
+        }
     }
 
     @EventListener

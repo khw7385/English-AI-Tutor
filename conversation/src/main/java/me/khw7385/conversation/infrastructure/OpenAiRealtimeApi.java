@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.RealtimeApi;
+import me.khw7385.conversation.core.exception.MessageChannelConnectionException;
 import me.khw7385.conversation.infrastructure.websocket.MessageChannelFactory;
 import me.khw7385.conversation.infrastructure.websocket.openai.RealtimeWebSocketHandler;
 import org.springframework.beans.factory.annotation.Value;

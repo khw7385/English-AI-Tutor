@@ -5,6 +5,7 @@ import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
+import me.khw7385.conversation.core.exception.MessageChannelNotFoundException;
 import me.khw7385.conversation.infrastructure.OpenAiRealtimeApi;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class AudioStreamingFacade implements AudioStreamingUseCase {
 
     @Override
     public void forward(String id, Message message){
-        MessageChannel channel = sessionRegistry.resolve(id);
+        MessageChannel channel = channelRegistry.resolvePairChannel(id).orElseThrow(MessageChannelNotFoundException::new);
         channel.sendAudioMessage(message);
     }
 

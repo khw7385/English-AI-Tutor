@@ -5,12 +5,14 @@ import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
 public class InMemoryChannelRegistry implements ChannelRegistry {
-    private final ConcurrentHashMap<String, MessageChannel> sessionStore = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, MessageChannel> channelStore = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, String> partnerStore = new ConcurrentHashMap<>();
 
     @Override
     public void register(String id, String partnerId, MessageChannel channel) {
@@ -20,8 +22,14 @@ public class InMemoryChannelRegistry implements ChannelRegistry {
     }
 
     @Override
-    public MessageChannel resolve(String id) {
-        return sessionStore.get(id);
+    public MessageChannel resolve(String id){
+        return channelStore.get(id);
+    }
+
+    @Override
+    public Optional<MessageChannel> resolvePairChannel(String id) {
+        String partnerId = partnerStore.get(id);
+        return Optional.ofNullable(partnerId != null ? channelStore.get(partnerId): null);
     }
 
     @Override
