@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
+import me.khw7385.conversation.core.exception.MessageTransferException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -22,21 +23,27 @@ public class WebSocketMessageChannel implements MessageChannel {
     }
 
     @Override
+    public boolean isOpen(){
+        return session.isOpen();
+    }
+
+    @Override
     public void sendAudioMessage(Message message) {
         try {
             String json = objectMapper.writeValueAsString(message);
             session.sendMessage(new TextMessage(json));
         } catch (IOException e) {
-            // 임시 처리
-            throw new RuntimeException(e);
+            log.error("메시지 전송 중 오류 발생: sessionId={}", session.getId());
+            throw new MessageTransferException();
         }
     }
 
+    @Override
     public void close(){
         try {
             session.close();
         } catch (IOException e) {
-            log.warn("WebSocket 세션 종료 중 I/O 오류 발생 (sessionId={}): {}", session.getId(), e.getMessage());
+            log.warn("WebSocket 세션 종료 중 I/O 오류 발생: sessionId={}, message={}", session.getId(), e.getMessage());
         }
     }
 }

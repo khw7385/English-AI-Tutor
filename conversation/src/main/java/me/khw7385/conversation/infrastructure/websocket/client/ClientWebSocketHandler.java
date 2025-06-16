@@ -24,6 +24,7 @@ public class ClientWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session){
+        log.info("Client WebSocket 연결 성공: session id = {}", session.getId());
         eventPublisher.publishEvent(new ClientWebSocketConnectedEvent(session.getId(), messageChannelFactory.create(session)));
     }
 
@@ -34,8 +35,8 @@ public class ClientWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.debug("Client WebSocket 연결 종료. id={}", session.getId());
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status){
+        log.info("Client WebSocket 연결 종료: session id={}", session.getId());
         eventPublisher.publishEvent(new ClientWebSocketClosedEvent(session.getId()));
     }
 }
