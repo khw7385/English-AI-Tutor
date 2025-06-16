@@ -27,16 +27,17 @@ public class WebSocketMessageChannel implements MessageChannel {
             String json = objectMapper.writeValueAsString(message);
             session.sendMessage(new TextMessage(json));
         } catch (IOException e) {
-            // 임시 처리
-            throw new RuntimeException(e);
+            log.error("메시지 전송 중 오류 발생: sessionId={}", session.getId());
+            throw new MessageTransferException();
         }
     }
 
+    @Override
     public void close(){
         try {
             session.close();
         } catch (IOException e) {
-            log.warn("WebSocket 세션 종료 중 I/O 오류 발생 (sessionId={}): {}", session.getId(), e.getMessage());
+            log.warn("WebSocket 세션 종료 중 I/O 오류 발생: sessionId={}, message={}", session.getId(), e.getMessage());
         }
     }
 }

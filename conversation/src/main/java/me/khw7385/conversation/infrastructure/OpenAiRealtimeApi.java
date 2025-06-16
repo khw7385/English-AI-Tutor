@@ -1,6 +1,7 @@
 package me.khw7385.conversation.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.RealtimeApi;
 import me.khw7385.conversation.infrastructure.websocket.MessageChannelFactory;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OpenAiRealtimeApi implements RealtimeApi {
@@ -42,8 +44,8 @@ public class OpenAiRealtimeApi implements RealtimeApi {
         try {
             return messageChannelFactory.create(openWebSocketSessionAsync().get(DELAY_SECONDS, TimeUnit.SECONDS));
         }catch (InterruptedException | ExecutionException | TimeoutException e){
-            // 임시 처리
-            throw new RuntimeException();
+            log.error("웹 소켓 연결 실패: message={}", e.getMessage());
+            throw new MessageChannelConnectionException();
         }
     }
 
