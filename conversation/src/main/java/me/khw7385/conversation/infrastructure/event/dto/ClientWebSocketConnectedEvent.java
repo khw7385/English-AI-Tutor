@@ -4,6 +4,7 @@ import me.khw7385.conversation.application.port.outbound.MessageChannel;
 
 public record ClientWebSocketConnectedEvent(
         String webSocketId,
-        MessageChannel channel
+        MessageChannel channel,
+        Long themeId
 ) {
 }
