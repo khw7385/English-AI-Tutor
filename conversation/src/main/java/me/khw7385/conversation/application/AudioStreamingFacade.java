@@ -17,28 +17,29 @@ public class AudioStreamingFacade implements AudioStreamingUseCase {
     private final OpenAiRealtimeApi realtimeApi;
 
     @Override
-    public void connect(String id, MessageChannel clientChannel){
+    public void connect(String channelId, MessageChannel clientChannel){
         MessageChannel aiChannel = realtimeApi.openMessageChannel();
-        channelRegistry.register(id, aiChannel.getId(), clientChannel);
-        channelRegistry.register(aiChannel.getId(), id, aiChannel);
+
+        channelRegistry.register(channelId, aiChannel.getId(), clientChannel);
+        channelRegistry.register(aiChannel.getId(), channelId, aiChannel);
     }
 
     @Override
-    public void forward(String id, Message message){
-        MessageChannel channel = channelRegistry.resolvePairChannel(id).orElseThrow(MessageChannelNotFoundException::new);
+    public void forward(String channelId, Message message){
+        MessageChannel channel = channelRegistry.resolvePairChannel(channelId).orElseThrow(MessageChannelNotFoundException::new);
         channel.sendAudioMessage(message);
     }
 
     @Override
-    public void releaseChannel(String id) {
-        MessageChannel channel = channelRegistry.resolve(id);
-        channelRegistry.unregister(id);
+    public void releaseChannel(String channelId) {
+        MessageChannel channel = channelRegistry.resolve(channelId);
+        channelRegistry.unregister(channelId);
         channel.close();
     }
 
     @Override
-    public void releasePairChannel(String id){
-        channelRegistry.resolvePairChannel(id).ifPresent(channel -> {
+    public void releasePairChannel(String channelId){
+        channelRegistry.resolvePairChannel(channelId).ifPresent(channel -> {
             if(channel.isOpen()) channel.close();
             channelRegistry.unregister(channel.getId());
         });
