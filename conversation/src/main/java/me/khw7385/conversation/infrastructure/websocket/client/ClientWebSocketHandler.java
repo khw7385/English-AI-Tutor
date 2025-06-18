@@ -24,8 +24,10 @@ public class ClientWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session){
+        Long themeId = Long.parseLong((String)session.getAttributes().get("theme"));
+
         log.info("Client WebSocket 연결 성공: session id = {}", session.getId());
-        eventPublisher.publishEvent(new ClientWebSocketConnectedEvent(session.getId(), messageChannelFactory.create(session)));
+        eventPublisher.publishEvent(new ClientWebSocketConnectedEvent(session.getId(), messageChannelFactory.create(session), themeId));
     }
 
     @Override
