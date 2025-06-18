@@ -8,7 +8,9 @@ import java.util.Arrays;
 
 public enum RealtimeEventType {
     // client
-    CLIENT_INPUT_AUDIO_BUFFER_APPEND("input_audio_buffer.append"),
+    SESSION_UPDATE("session.update"),
+
+    INPUT_AUDIO_BUFFER_APPEND("input_audio_buffer.append"),
 
     // server
     ERROR("error"),

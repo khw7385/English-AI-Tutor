@@ -6,17 +6,32 @@ import lombok.Builder;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 
+import static me.khw7385.conversation.infrastructure.enums.RealtimeEventType.*;
+
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ServerToAiRealtimeMessage(
         @JsonProperty("event_id") String eventId,
         RealtimeEventType type,
-        String audio
+        String audio,
+        Session session
 ) implements Message{
-    public static ServerToAiRealtimeMessage of(RealtimeEventType type, String base64chunk){
+    public static ServerToAiRealtimeMessage createAudioAppendMessage(String base64chunk){
         return ServerToAiRealtimeMessage.builder()
-                .type(type)
+                .type(INPUT_AUDIO_BUFFER_APPEND)
                 .audio(base64chunk)
                 .build();
+    }
+
+    public static ServerToAiRealtimeMessage createSessionUpdateMessage(String instructions){
+        return ServerToAiRealtimeMessage.builder()
+                .type(SESSION_UPDATE)
+                .session(new Session(instructions))
+                .build();
+    }
+
+    private record Session(
+            String instructions
+    ){
     }
 }
