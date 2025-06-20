@@ -2,9 +2,9 @@ package me.khw7385.conversation.application;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.application.port.inbound.AudioStreamingUseCase;
+import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
-import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
 import me.khw7385.conversation.core.exception.MessageChannelNotFoundException;
 import me.khw7385.conversation.infrastructure.OpenAiRealtimeApi;
 import org.springframework.stereotype.Service;
@@ -17,30 +17,27 @@ public class AudioStreamingFacade implements AudioStreamingUseCase {
     private final OpenAiRealtimeApi realtimeApi;
 
     @Override
-    public void connect(String id, MessageChannel clientChannel){
+    public void connect(String channelId, MessageChannel clientChannel){
         MessageChannel aiChannel = realtimeApi.openMessageChannel();
-        channelRegistry.register(id, aiChannel.getId(), clientChannel);
-        channelRegistry.register(aiChannel.getId(), id, aiChannel);
+
+        channelRegistry.register(channelId, aiChannel.getId(), clientChannel);
+        channelRegistry.register(aiChannel.getId(), channelId, aiChannel);
     }
 
     @Override
-    public void forward(String id, Message message){
-        MessageChannel channel = channelRegistry.resolvePairChannel(id).orElseThrow(MessageChannelNotFoundException::new);
+    public void forward(String channelId, Message message){
+        MessageChannel channel = channelRegistry.resolvePairChannel(channelId).orElseThrow(MessageChannelNotFoundException::new);
         channel.sendAudioMessage(message);
     }
 
     @Override
-    public void releaseChannel(String id) {
-        MessageChannel channel = channelRegistry.resolve(id);
-        channelRegistry.unregister(id);
-        channel.close();
-    }
+    public void cleanUp(String channelId){
+        channelRegistry.resolve(channelId).ifPresent(channel -> {
+            MessageChannel partnerChannel = channelRegistry.resolvePairChannel(channelId).orElseThrow(MessageChannelNotFoundException::new);
+            channelRegistry.unregister(channelId);
+            channelRegistry.unregister(partnerChannel.getId());
 
-    @Override
-    public void releasePairChannel(String id){
-        channelRegistry.resolvePairChannel(id).ifPresent(channel -> {
-            if(channel.isOpen()) channel.close();
-            channelRegistry.unregister(channel.getId());
+            if(partnerChannel.isOpen()) partnerChannel.close();
         });
     }
 }

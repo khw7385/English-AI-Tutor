@@ -4,8 +4,7 @@ import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.application.port.outbound.MessageChannel;
 
 public interface AudioStreamingUseCase {
-    void connect(String id, MessageChannel channel);
-    void forward(String id, Message message);
-    void releaseChannel(String id);
-    void releasePairChannel(String id);
+    void connect(String channelId, MessageChannel channel);
+    void forward(String channelId, Message message);
+    void cleanUp(String channelId);
 }

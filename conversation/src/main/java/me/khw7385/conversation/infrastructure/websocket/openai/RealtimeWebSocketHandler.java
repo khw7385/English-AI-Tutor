@@ -3,9 +3,11 @@ package me.khw7385.conversation.infrastructure.websocket.openai;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.khw7385.conversation.core.annotation.WebSocketErrorHandling;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 import me.khw7385.conversation.infrastructure.event.dto.RealtimeAudioChunkReceivedEvent;
 import me.khw7385.conversation.infrastructure.event.dto.RealtimeWebSocketClosedEvent;
+import me.khw7385.conversation.infrastructure.websocket.openai.dto.AiToServerRealtimeMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -21,16 +23,18 @@ public class RealtimeWebSocketHandler extends AbstractWebSocketHandler {
     private final ObjectMapper objectMapper;
 
     @Override
+    @WebSocketErrorHandling
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Realtime WebSocket 연걸 성공: session id = {}", session.getId());
     }
 
     @Override
+    @WebSocketErrorHandling
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         AiToServerRealtimeMessage response = objectMapper.readValue(message.getPayload(), AiToServerRealtimeMessage.class);
         log.info("메시지 이벤트 타입: {}", response.type().getValue());
 
-        if (response.type().equals(RealtimeEventType.RESPONSE_AUDIO_DELTA)) {
+        if (session.isOpen() && response.type().equals(RealtimeEventType.RESPONSE_AUDIO_DELTA)) {
             eventPublisher.publishEvent(new RealtimeAudioChunkReceivedEvent(session.getId(), response.delta()));
         }
     }

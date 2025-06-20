@@ -1,8 +1,8 @@
 package me.khw7385.conversation.infrastructure.websocket;
 
 import lombok.extern.slf4j.Slf4j;
-import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import me.khw7385.conversation.application.port.outbound.ChannelRegistry;
+import me.khw7385.conversation.application.port.outbound.MessageChannel;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -22,8 +22,8 @@ public class InMemoryChannelRegistry implements ChannelRegistry {
     }
 
     @Override
-    public MessageChannel resolve(String id){
-        return channelStore.get(id);
+    public Optional<MessageChannel> resolve(String id){
+        return Optional.ofNullable(channelStore.get(id));
     }
 
     @Override
@@ -34,8 +34,9 @@ public class InMemoryChannelRegistry implements ChannelRegistry {
 
     @Override
     public void unregister(String id) {
+        log.info("메시지 채널 제거: id = {}", id);
+
         channelStore.remove(id);
         partnerStore.remove(id);
-        log.info("메시지 채널 제거: channelId = {}", id);
     }
 }
