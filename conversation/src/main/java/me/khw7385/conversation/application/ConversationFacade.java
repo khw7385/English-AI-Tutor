@@ -1,6 +1,7 @@
 package me.khw7385.conversation.application;
 
 import lombok.RequiredArgsConstructor;
+import me.khw7385.conversation.core.exception.ConversationNotFoundException;
 import me.khw7385.conversation.domain.Conversation;
 import me.khw7385.conversation.domain.repository.ConversationRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class ConversationFacade {
 
     public String findPrompt(Long themeId){
         Conversation conversation = conversationRepository.findById(themeId)
-                .orElseThrow();
+                .orElseThrow(() -> new ConversationNotFoundException(themeId));
         return conversation.getPrompt();
     }
 }
