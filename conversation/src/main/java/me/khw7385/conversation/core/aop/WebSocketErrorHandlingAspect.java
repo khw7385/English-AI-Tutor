@@ -13,17 +13,14 @@ import org.springframework.web.socket.WebSocketSession;
 @Slf4j
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class WebSocketErrorHandlingAspect {
-    private final AudioStreamingUseCase audioStreamingUseCase;
-
     @Around("@annotation(me.khw7385.conversation.core.annotation.WebSocketErrorHandling) && args(session, ..)")
     public Object handleOnError(ProceedingJoinPoint point, WebSocketSession session) throws Throwable{
         try{
             return point.proceed();
         }catch (ApplicationException e){
             log.error(e.getMessage());
-            audioStreamingUseCase.disconnect(session.getId());
+            session.close();
         }
         return null;
     }
