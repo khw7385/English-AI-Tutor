@@ -1,4 +1,4 @@
-package me.khw7385.conversation.infrastructure.websocket.openai;
+package me.khw7385.conversation.infrastructure.websocket.openai.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;

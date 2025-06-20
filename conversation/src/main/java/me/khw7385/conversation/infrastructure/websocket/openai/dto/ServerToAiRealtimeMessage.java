@@ -1,4 +1,4 @@
-package me.khw7385.conversation.infrastructure.websocket.openai;
+package me.khw7385.conversation.infrastructure.websocket.openai.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,8 @@ import lombok.Builder;
 import me.khw7385.conversation.application.port.outbound.Message;
 import me.khw7385.conversation.infrastructure.enums.RealtimeEventType;
 
-import static me.khw7385.conversation.infrastructure.enums.RealtimeEventType.*;
+import static me.khw7385.conversation.infrastructure.enums.RealtimeEventType.INPUT_AUDIO_BUFFER_APPEND;
+import static me.khw7385.conversation.infrastructure.enums.RealtimeEventType.SESSION_UPDATE;
 
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
