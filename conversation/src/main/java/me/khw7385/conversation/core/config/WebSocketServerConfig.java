@@ -2,8 +2,10 @@ package me.khw7385.conversation.core.config;
 
 import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.core.interceptor.WebSocketInterceptor;
+import me.khw7385.conversation.infrastructure.websocket.ExceptionHandlingWebSocketHandlerDecorator;
 import me.khw7385.conversation.infrastructure.websocket.client.ClientWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -17,7 +19,9 @@ public class WebSocketServerConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(clientWebSocketHandler, "/conversation/streaming")
+        WebSocketHandler handler = new ExceptionHandlingWebSocketHandlerDecorator(clientWebSocketHandler);
+
+        registry.addHandler(handler, "/conversation/streaming")
                 .addInterceptors(webSocketInterceptor);
     }
 }
