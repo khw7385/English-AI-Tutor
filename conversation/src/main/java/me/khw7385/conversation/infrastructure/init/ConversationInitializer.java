@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.khw7385.conversation.domain.repository.ConversationRepository;
 import org.springframework.stereotype.Component;
 
-import static me.khw7385.conversation.domain.Conversation.*;
+import static me.khw7385.conversation.domain.Conversation.create;
 
 @Component
 @RequiredArgsConstructor
